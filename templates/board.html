@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="container mt-5 p-5">
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">번호</th>
+            <th scope="col">글제목</th>
+            <th scope="col">작성일</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for question in question_list %}
+        <tr>
+            <th scope="row">{{ question[0] }}</th>
+            <td><a href="{{ '/board/detail/%s' % question[0] }}">{{ question[1] }}</a></td>
+            <td>{{ question[3] }}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+</div>
+{% endblock %}
