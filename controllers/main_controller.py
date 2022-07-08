@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template
-from models.question_mgmt import Question
+from models.question_model import Question
 
 main_bp = Blueprint('main', __name__, url_prefix='/')
 

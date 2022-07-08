@@ -1,4 +1,4 @@
-from services.mysql import conn_mysql
+from services.conn_mysql import mysql_conn
 
 
 class Question:
@@ -13,7 +13,7 @@ class Question:
 
     @staticmethod
     def get_question_list():
-        db_cursor = conn_mysql().cursor()
+        db_cursor = mysql_conn().cursor()
         sql = "SELECT * FROM question"
         db_cursor.execute(sql)
         question_list = db_cursor.fetchall()
@@ -25,7 +25,7 @@ class Question:
 
     @staticmethod
     def get_question(q_id):
-        db_cursor = conn_mysql().cursor()
+        db_cursor = mysql_conn().cursor()
         sql = "SELECT * FROM question WHERE q_id = %d" % q_id
         db_cursor.execute(sql)
         question = db_cursor.fetchone()
@@ -34,3 +34,11 @@ class Question:
             return None
 
         return question
+
+    @staticmethod
+    def insert(subject, content) -> bool:
+        db_cursor = mysql_conn().cursor()
+        sql = "INSERT INTO question(subject, content) VALUES('%s', '%s')" % (subject, content)
+        result: int = db_cursor.execute(sql)
+        mysql_conn().commit()
+        return bool(result)

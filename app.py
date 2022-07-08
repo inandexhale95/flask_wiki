@@ -10,6 +10,7 @@ def create_app():
     app.register_blueprint(answer_controller.answer_bp)
 
     if __name__ == "__main__":
+        app.secret_key = 'inandexhale_server'
         app.run(debug=True)
 
     return app

@@ -1,6 +1,7 @@
-from flask import Blueprint, render_template, request
-from models.question_mgmt import Question
-from models.answer_mgmt import Answer
+from flask import Blueprint, render_template, request, redirect
+from models.question_model import Question
+from models.answer_model import Answer
+from forms.form import QuestionForm
 
 board_bp = Blueprint('board', __name__, url_prefix='/board')
 
@@ -17,3 +18,17 @@ def detail(q_id):
     question = Question.get_question(q_id)
     answer_list = Answer.get_answer_list(q_id)
     return render_template('detail.html', question=question, answer_list=answer_list)
+
+
+@board_bp.route("/create/", methods=['GET', 'POST'])
+def create():
+    form = QuestionForm()
+
+    # form.validate_on_submit 함수는 전송된 폼 데이터의 정합성을 점검한다.
+    # 즉, QuestionForm 클래스의 각 속성에 지정한 DataRequired() 같은 점검 항목에 이상이 없는지 확인한다.
+    if request.method == 'POST' and form.validate_on_submit():
+        result = Question.insert(form.subject.data, form.content.data)
+        # 예외 처리 해야함
+        if result:
+            return redirect('/board/list')
+    return render_template('board_form.html', form=form)
