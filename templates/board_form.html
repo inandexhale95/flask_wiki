@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends '/layout/base.html' %}
 {% block content %}
 
 <!-- 질문 등록 -->
@@ -6,13 +6,26 @@
     <h5 class="my-3 border-bottom pb-2">질문등록</h5>
     <form action="/board/create" method="post" class="my-3">
         {{ form.csrf_token }}
+        {% if form.errors %}
+        <div class="alert alert-dagner" role="alert">
+            {% for field, errors in form.errors.items() %}
+            <strong>{{ form[field].label }}</strong>
+            <ul>
+                {% for error in errors %}
+                <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+            {% endfor %}
+        </div>
+        {% endif %}
         <div class="mb-3">
             <label for="subject">제목</label>
-            <input type="text" class="form-control" name="subject" id="subject">
+            <input type="text" class="form-control" name="subject" id="subject"
+                    value="{{ form.subject.data or '' }}">
         </div>
         <div class="mb-3">
             <label for="content">내용</label>
-            <textarea class="form-control" name="content" id="content" rows="10"></textarea>
+            <textarea class="form-control" name="content" id="content" rows="10">{{ form.content.data or '' }}</textarea>
         </div>
         <button type="submit" class="btn btn-primary">저 장</button>
     </form>

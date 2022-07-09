@@ -1,4 +1,4 @@
-from services.conn_mysql import mysql_conn
+from database.conn_mysql import mysql_conn
 from datetime import datetime
 
 
