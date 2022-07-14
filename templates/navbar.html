@@ -1,9 +1,14 @@
 <nav id="navbar" class="navbar order-last order-lg-0">
     <ul>
-        <li><a class="active" href="index.html">Home</a></li>
+        <li><a class="{{ 'active' if active_page == 'index' else '' }}" href="/">Home</a></li>
         <li><a href="/">About</a></li>
-        <li><a href="/board/list">Board</a></li>
-        <li><a href="contact.html">Contact</a></li>
+        <li><a class="{{ 'active' if active_page == 'board' else '' }}" href="/board/list">Board</a></li>
+        {% if current_user.is_authenticated %}
+        <li><a class="{{ 'active' if active_page == 'login' else '' }}" href="/auth/logout">Logout</a></li>
+        {% else %}
+        <li><a class="{{ 'active' if active_page == 'login' else '' }}" href="/auth/login">Login</a></li>
+        <li><a class="{{ 'active' if active_page == 'signup' else '' }}" href="/auth/signup">Signup</a></li>
+        {% endif %}
     </ul>
     <i class="bi bi-list mobile-nav-toggle"></i>
 </nav><!-- .navbar -->

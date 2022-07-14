@@ -1,5 +1,4 @@
 from flask import Blueprint, render_template, abort
-from flask.views import View
 
 main_bp = Blueprint('main', __name__, url_prefix='/')
 
@@ -10,8 +9,8 @@ def index():
     return render_template('index.html')
 
 
-@main_bp.route("/users")
-def users():
+@main_bp.route("/error_test")
+def error_test():
     # abort 함수로 에러를 발생 시킨다
     abort(403)
 
