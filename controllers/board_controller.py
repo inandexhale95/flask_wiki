@@ -1,3 +1,5 @@
+import math
+
 from flask import Blueprint, render_template, request, redirect, url_for
 from models.question_model import Question
 from models.answer_model import Answer
@@ -7,12 +9,25 @@ board_bp = Blueprint('board', __name__, url_prefix='/board')
 
 
 @board_bp.route("/list", methods=['GET'])
-def _list(page=0):
+def _list(page=1):
     if request.args.get('page'):
         page = int(request.args.get('page', type=int))
     per_page = 20
+
+    # 총 질문 갯수
+    total_question = Question.get_question_count()
+    # math.ceil로 소수점을 올림 해준다.
+    total_page = math.ceil(total_question / per_page)
+
+    # 페이지 수를 초과하거나 1 미만일 때
+    if page > total_page:
+        page = total_page
+    elif page <= 0:
+        page = 1
+
+    page_index = total_question - (page - 1) * per_page
     question_list = Question.get_question_list(per_page, page)
-    return render_template('board.html', question_list=question_list, page=page)
+    return render_template('board.html', question_list=question_list, total_page=total_page, page_index=page_index, page=page)
 
 
 @board_bp.route("/answer/create", methods=['POST'])

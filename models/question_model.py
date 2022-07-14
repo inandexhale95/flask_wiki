@@ -22,12 +22,10 @@ class Question:
 
     @staticmethod
     def get_question_list(per_page, page):
-        # 질문 게시글 총 갯수
-        total_question = Question.get_question_count()
-        # (질문 갯수 / 페이지 출력 갯수)
-        total_page = round(total_question / per_page)
+        # OFFSET이 0부터 시작돼 -1을 해줌
+        page -= 1
         db_cursor = mysql_conn().cursor()
-        sql = "SELECT * FROM question ORDER BY q_id LIMIT %s OFFSET %s" % (per_page, page*per_page)
+        sql = "SELECT * FROM question ORDER BY create_date DESC LIMIT %s OFFSET %s" % (per_page, page*per_page)
         db_cursor.execute(sql)
         question_list = db_cursor.fetchall()
 

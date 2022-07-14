@@ -10,6 +10,10 @@ def create_app():
     app.register_blueprint(main_controller.main_bp)
     app.register_blueprint(board_controller.board_bp)
 
+    from common.filter import format_datetime, answer_count
+    app.jinja_env.filters['datetime'] = format_datetime
+    app.jinja_env.filters['answer_count'] = answer_count
+
     if __name__ == "__main__":
         app.secret_key = 'inandexhale_server'
     app.run(debug=True)

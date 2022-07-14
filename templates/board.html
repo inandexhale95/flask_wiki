@@ -13,16 +13,21 @@
         <tbody>
         {% for question in question_list %}
         <tr>
-            <th scope="row">{{ loop.index }}</th>
-            <td><a href="{{ '/board/detail/%s' % question[0] }}">{{ question[1] }}</a></td>
-            <td>{{ question[3] }}</td>
+            <th scope="row">{{ page_index - loop.index0 }}</th>
+            <td>
+                <a href="{{ '/board/detail/%s' % question[0] }}">{{ question[1] }}</a>
+                {% if question[0]|answer_count %}
+                <span class="text-danger small mx-2">{{ question[0]|answer_count }}</span>
+                {% endif %}
+            </td>
+            <td>{{ question[3]|datetime }}</td>
         </tr>
         {% endfor %}
         </tbody>
     </table>
     <!-- 페이징처리 시작 -->
     <ul class="pagination justify-content-center">
-        {% for page_num in range(question_list|length) %}
+        {% for page_num in range(total_page + 1) %}
         {% if page_num %}
         {% if page_num != page %}
         <li class="page-item">
@@ -33,10 +38,6 @@
             <a class="page-link" href="javascript:void(0)">{{ page_num }}</a>
         </li>
         {% endif %}
-        {% else %}
-        <li class="disabled">
-            <a class="page-link" href="javascript:void(0)">...</a>
-        </li>
         {% endif %}
         {% endfor %}
     </ul>
