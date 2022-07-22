@@ -1,3 +1,4 @@
+import pymysql.cursors
 from database.conn_mysql import mysql_conn
 from flask_login import UserMixin
 
@@ -42,16 +43,19 @@ class User(UserMixin):
 
     @staticmethod
     def get_user(username):
-        db_cursor = mysql_conn().cursor()
+        db_cursor = mysql_conn().cursor(pymysql.cursors.DictCursor)
         sql = "SELECT * from user WHERE username = %s"
         db_cursor.execute(sql, username)
-        user = db_cursor.fetchone()
+        u = db_cursor.fetchone()
+        user = User(u['u_id'], u['username'], u['password'], u['email'], u['create_date'])
         return user
 
     @staticmethod
     def get_user_for_id(u_id):
-        db_cursor = mysql_conn().cursor()
+        db_cursor = mysql_conn().cursor(pymysql.cursors.DictCursor)
         sql = "SELECT * from user WHERE u_id = %s"
         db_cursor.execute(sql, u_id)
-        user = db_cursor.fetchone()
+        u = db_cursor.fetchone()
+        print(u)
+        user = User(u['u_id'], u['username'], u['password'], u['email'], u['create_date'])
         return user

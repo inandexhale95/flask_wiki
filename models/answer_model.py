@@ -4,9 +4,9 @@ from datetime import datetime
 
 class Answer:
     def __init__(self, a_id, q_id, content, create_date):
-        self.a_id = a_id,
-        self.q_id = q_id,
-        self.content = content,
+        self.a_id = a_id
+        self.q_id = q_id
+        self.content = content
         self.create_date = create_date
 
     def __str__(self):

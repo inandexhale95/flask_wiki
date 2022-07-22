@@ -25,7 +25,7 @@ def signup():
         elif email_check:
             flash('이미 존재하는 이메일입니다.')
 
-    return render_template('/auth/signup.html', form=form)
+    return render_template('auth/signup.html', form=form)
 
 
 @auth_bp.route('/login', methods=['GET', 'POST'])
@@ -37,11 +37,11 @@ def login():
         user = User.get_user(username=form.username.data)
         if not user:
             error = "존재하지 않는 사용자입니다."
-        elif not check_password_hash(user[2], form.password.data):
+        elif not check_password_hash(user.password, form.password.data):
             error = "비밀번호가 올바르지 않습니다."
+
         if error is None:
-            user_object = User(user[0], user[1], user[2], user[3], user[4])
-            login_user(user_object)
+            login_user(user)
             return redirect('/')
         flash(error)
     return render_template('auth/login.html', form=form)

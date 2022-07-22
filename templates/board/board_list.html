@@ -7,23 +7,27 @@
         <thead>
         <tr>
             <th scope="col">번호</th>
-            <th scope="col">글제목</th>
+            <th scope="col" style="width:50%">글제목</th>
+            <th scope="col">글쓴이</th>
             <th scope="col">작성일</th>
         </tr>
         </thead>
         <tbody>
+        {% if question_list %}
         {% for question in question_list %}
         <tr>
             <th scope="row">{{ page_index - loop.index0 }}</th>
             <td>
-                <a href="{{ '/board/detail/%s' % question[0] }}">{{ question[1] }}</a>
-                {% if question[0]|answer_count %}
-                <span class="text-danger small mx-2">{{ question[0]|answer_count }}</span>
+                <a href="{{ '/board/detail/%s' % question.q_id }}">{{ question['subject'] }}</a>
+                {% if question['q_id']|answer_count %}
+                <span class="text-danger small mx-2">{{ question['q_id']|answer_count }}</span>
                 {% endif %}
             </td>
-            <td>{{ question[3]|datetime }}</td>
+            <td>{{ question['u_id']|get_question_writer }}</td>
+            <td>{{ question['create_date']|datetime }}</td>
         </tr>
         {% endfor %}
+        {% endif %}
         </tbody>
     </table>
     <!-- 페이징처리 시작 -->

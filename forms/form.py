@@ -1,9 +1,10 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, TextAreaField, PasswordField, EmailField
+from wtforms import StringField, TextAreaField, PasswordField, EmailField, HiddenField
 from wtforms.validators import DataRequired, Length, EqualTo, Email
 
 
 class QuestionForm(FlaskForm):
+    u_id = HiddenField()
     subject = StringField('제목', validators=[DataRequired('제목은 필수 입력 값 입니다.')])
     content = TextAreaField('내용', validators=[DataRequired('내용은 필수 입력 값 입니다.')])
 

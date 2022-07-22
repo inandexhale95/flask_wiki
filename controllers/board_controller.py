@@ -1,6 +1,7 @@
 import math
 
 from flask import Blueprint, render_template, request, redirect, url_for
+from flask_login import login_required
 from models.question_model import Question
 from models.answer_model import Answer
 from forms.form import QuestionForm, AnswerForm
@@ -9,6 +10,7 @@ board_bp = Blueprint('board', __name__, url_prefix='/board')
 
 
 @board_bp.route("/list", methods=['GET'])
+@login_required
 def _list(page=1):
     if request.args.get('page'):
         page = int(request.args.get('page', type=int))
@@ -16,18 +18,24 @@ def _list(page=1):
 
     # 총 질문 갯수
     total_question = Question.get_question_count()
-    # math.ceil로 소수점을 올림 해준다.
-    total_page = math.ceil(total_question / per_page)
 
-    # 페이지 수를 초과하거나 1 미만일 때
-    if page > total_page:
-        page = total_page
-    elif page <= 0:
-        page = 1
+    if total_question > 0:
+        # math.ceil로 소수점을 올림 해준다.
+        total_page = math.ceil(total_question / per_page)
 
-    page_index = total_question - (page - 1) * per_page
-    question_list = Question.get_question_list(per_page, page)
-    return render_template('board.html', question_list=question_list, total_page=total_page, page_index=page_index, page=page)
+        # 페이지 수를 초과하거나 1 미만일 때
+        if page > total_page:
+            page = total_page
+        elif page <= 0:
+            page = 1
+
+        page_index = total_question - (page - 1) * per_page
+        question_list = Question.get_question_list(per_page, page)
+    else:
+        total_page = 0
+        page_index = 0
+        question_list = 0
+    return render_template('board/board_list.html', question_list=question_list, total_page=total_page, page_index=page_index, page=page)
 
 
 @board_bp.route("/answer/create", methods=['POST'])
@@ -43,7 +51,7 @@ def detail(q_id: int = 0):
         content = form.content.data
         if Answer.create(q_id, content):
             return redirect('/board/detail/%s' % q_id)
-    return render_template('detail.html', question=question, answer_list=answer_list, form=form)
+    return render_template('board/detail.html', question=question, answer_list=answer_list, form=form)
 
 
 @board_bp.route("/create/", methods=['GET', 'POST'])
@@ -53,8 +61,8 @@ def create():
     # form.validate_on_submit 함수는 전송된 폼 데이터의 정합성을 점검한다.
     # 즉, QuestionForm 클래스의 각 속성에 지정한 DataRequired() 같은 점검 항목에 이상이 없는지 확인한다.
     if request.method == 'POST' and form.validate_on_submit():
-        result = Question.insert(form.subject.data, form.content.data)
+        result = Question.insert(subject=form.subject.data, content=form.content.data, u_id=form.u_id.data)
         # 예외 처리 해야함
         if result:
             return redirect('/board/list')
-    return render_template('board_form.html', form=form)
+    return render_template('board/board_form.html', form=form)

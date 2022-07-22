@@ -14,9 +14,10 @@ def create_app():
     app.register_blueprint(board_controller.board_bp)
     app.register_blueprint(auth_controller.auth_bp)
 
-    from common.filter import format_datetime, answer_count
+    from common.filter import format_datetime, answer_count, get_question_writer
     app.jinja_env.filters['datetime'] = format_datetime
     app.jinja_env.filters['answer_count'] = answer_count
+    app.jinja_env.filters['get_question_writer'] = get_question_writer
 
     CORS(app)
 
@@ -31,7 +32,7 @@ def create_app():
     def load_user(user_id):
         try:
             user = User.get_user_for_id(user_id)
-            return User(user[0], user[1], user[2], user[3], user[4])
+            return user
         except:
             return None
 
